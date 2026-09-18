@@ -18,6 +18,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "backend"))
 
 from app.main import app
+from app.services.knowledge_base import KnowledgeBaseService
 from app.services.storage import StorageService, StorageValidationError
 
 client = TestClient(app)
@@ -79,3 +80,9 @@ def test_offline_network_status() -> None:
     assert body["offline_mode"] is True
     assert body["model_endpoint_local"] is True
     assert "host firewall proof" in body["note"].lower()
+
+
+def test_knowledge_ingestion_rejects_outside_root() -> None:
+    service = KnowledgeBaseService()
+    with pytest.raises(ValueError):
+        service.ingest_directory("/tmp")

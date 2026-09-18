@@ -6,6 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DATA_ROOT = REPO_ROOT / "data"
+DEFAULT_KNOWLEDGE_BASE_ROOT = REPO_ROOT / "knowledge_base"
 
 
 class Settings(BaseSettings):
@@ -24,6 +25,7 @@ class Settings(BaseSettings):
     tmp_dir: Path = DEFAULT_DATA_ROOT / "tmp"
     vector_store_dir: Path = DEFAULT_DATA_ROOT / "vector_store"
     audit_dir: Path = DEFAULT_DATA_ROOT / "audit"
+    knowledge_base_dir: Path = DEFAULT_KNOWLEDGE_BASE_ROOT
 
     model_config = SettingsConfigDict(env_file=".env", env_prefix="SOVAI_", case_sensitive=False)
 
