@@ -10,7 +10,7 @@ knowledge_service = KnowledgeBaseService()
 @router.post("/ingest")
 def ingest_knowledge(payload: KnowledgeIngestRequest) -> dict[str, int | str]:
     try:
-        return knowledge_service.ingest_directory(payload.source_dir)
+        return knowledge_service.ingest_collection(payload.collection)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 

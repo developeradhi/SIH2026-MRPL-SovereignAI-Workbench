@@ -1,5 +1,6 @@
 from datetime import datetime
 from enum import Enum
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
@@ -60,7 +61,7 @@ class TaskReviewRequest(BaseModel):
 
 
 class KnowledgeIngestRequest(BaseModel):
-    source_dir: str
+    collection: Literal["manuals", "sops", "templates", "sample_documents"]
 
 
 class KnowledgeSearchRequest(BaseModel):

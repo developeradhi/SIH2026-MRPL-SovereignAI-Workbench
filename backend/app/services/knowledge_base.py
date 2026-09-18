@@ -1,5 +1,4 @@
 import json
-from pathlib import Path
 
 from app.config import get_settings
 
@@ -10,12 +9,12 @@ class KnowledgeBaseService:
         self.knowledge_base_root = settings.knowledge_base_dir.resolve()
         self.index_file = settings.vector_store_dir / "knowledge_index.json"
 
-    def ingest_directory(self, source_dir: str) -> dict[str, int | str]:
-        base = Path(source_dir).resolve()
+    def ingest_collection(self, collection: str) -> dict[str, int | str]:
+        base = (self.knowledge_base_root / collection).resolve()
+        if self.knowledge_base_root not in base.parents:
+            raise ValueError("Invalid knowledge collection path")
         if not base.exists() or not base.is_dir():
             raise ValueError("Source directory does not exist")
-        if self.knowledge_base_root not in base.parents and base != self.knowledge_base_root:
-            raise ValueError("Source directory must be inside configured knowledge base root")
 
         indexed_docs: list[dict[str, str]] = []
         for file_path in sorted(base.rglob("*")):
