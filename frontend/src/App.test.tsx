@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { vi } from 'vitest'
 
 import App from './App'
@@ -27,7 +27,7 @@ vi.stubGlobal('fetch', vi.fn(async (url: string) => {
 
 describe('App', () => {
   it('renders dashboard heading', async () => {
-    render(<App />)
-    expect(await screen.findByText(/SovereignAI Workbench Dashboard/i)).toBeInTheDocument()
+    const { findByText } = render(<App />)
+    expect(await findByText(/SovereignAI Workbench Dashboard/i)).toBeInTheDocument()
   })
 })
