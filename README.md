@@ -1,293 +1,524 @@
-# 🏭 Sovereign On-Premise Agentic AI Workbench
+# SovereignAI Workbench
 
-## SIH 2026 — Problem Statement 26117
+## SIH 2026 | MRPL | Smart Automation
 
-**Organization:** Mangalore Refinery and Petrochemicals Limited (MRPL)  
-**Category:** Software  
-**Theme:** Smart Automation  
+> **Problem Statement:** Sovereign On-Premise Agentic AI Workbench using Open-Weight Multimodal LLMs for Confidential Industrial Work  
+> **Organization:** Mangalore Refinery and Petrochemicals Limited (MRPL)  
+> **Category:** Software  
+> **Theme:** Smart Automation  
+> **Problem Statement ID shown in the provided SIH screenshot:** `26117`  
+> **Official reference:** https://sih.gov.in/sih2026PS
 
-An on-premise, sovereign AI workbench for confidential industrial work using open-weight multimodal language models. The system processes internal documents, images, scanned PDFs, handwritten notes, engineering drawings, and photographs without sending organizational data outside the local network.
+SovereignAI Workbench is an on-premise, local-first, multimodal and agentic AI platform for processing confidential industrial documents. It can read scanned PDFs, handwritten notes, photographs, engineering drawings and office documents; search a local knowledge base; execute multi-step tasks; and generate useful deliverables such as approval notes, reports, spreadsheets and code without sending data to external services.
 
-> **Important:** The official screenshot shows Problem Statement ID **26117**. Always verify the final ID and wording on the official SIH portal before submission.
-
----
-
-## Table of Contents
-
-- [1. Problem Summary](#1-problem-summary)
-- [2. Our Proposed Solution](#2-our-proposed-solution)
-- [3. Objectives](#3-objectives)
-- [4. Core Features](#4-core-features)
-- [5. Demonstration Scenario](#5-demonstration-scenario)
-- [6. System Architecture](#6-system-architecture)
-- [7. Technology Stack](#7-technology-stack)
-- [8. Project Structure](#8-project-structure)
-- [9. Local Setup](#9-local-setup)
-- [10. Usage Workflow](#10-usage-workflow)
-- [11. API Plan](#11-api-plan)
-- [12. Security and Sovereignty](#12-security-and-sovereignty)
-- [13. Team Responsibilities](#13-team-responsibilities)
-- [14. Development Roadmap](#14-development-roadmap)
-- [15. Evaluation and Demo Checklist](#15-evaluation-and-demo-checklist)
-- [16. Contribution Guidelines](#16-contribution-guidelines)
-- [17. License](#17-license)
+> **Submission note:** Verify the final problem statement ID and exact wording on the SIH portal before submitting. Never place confidential MRPL documents, proprietary data, credentials or private correspondence in this public repository.
 
 ---
 
-## 1. Problem Summary
+## Contents
 
-Industrial organizations handle confidential manuals, SOPs, inspection reports, approval notes, engineering drawings, photographs, and correspondence. A normal chatbot is insufficient because the required system must:
-
-- Search internal organizational knowledge.
-- Understand text, scans, handwriting, images, and engineering documents.
-- Perform multi-step tasks instead of giving only one answer.
-- Produce real deliverables such as Word, Excel, PDF, and code files.
-- Work entirely on-premise using open-weight models.
-- Provide visible evidence that no external network calls occur.
-
-The challenge is to build a working local AI system that can complete practical industrial tasks from beginning to end while protecting confidential information.
+- [1. Project Vision](#1-project-vision)
+- [2. Problem Understanding](#2-problem-understanding)
+- [3. Proposed Solution](#3-proposed-solution)
+- [4. Goals and Non-Goals](#4-goals-and-non-goals)
+- [5. Complete Requirements](#5-complete-requirements)
+- [6. Functional Requirements](#6-functional-requirements)
+- [7. Non-Functional Requirements](#7-non-functional-requirements)
+- [8. User Roles](#8-user-roles)
+- [9. End-to-End Workflow](#9-end-to-end-workflow)
+- [10. Demonstration Use Cases](#10-demonstration-use-cases)
+- [11. System Architecture](#11-system-architecture)
+- [12. Technology Stack](#12-technology-stack)
+- [13. Repository Structure](#13-repository-structure)
+- [14. Hardware and Software Requirements](#14-hardware-and-software-requirements)
+- [15. Installation Guide](#15-installation-guide)
+- [16. Configuration](#16-configuration)
+- [17. Development Guide](#17-development-guide)
+- [18. Knowledge Base Setup](#18-knowledge-base-setup)
+- [19. Agent and Tool Design](#19-agent-and-tool-design)
+- [20. Deliverable Generation](#20-deliverable-generation)
+- [21. Offline and Security Design](#21-offline-and-security-design)
+- [22. API Specification](#22-api-specification)
+- [23. Testing Strategy](#23-testing-strategy)
+- [24. Demo Plan](#24-demo-plan)
+- [25. Acceptance Criteria](#25-acceptance-criteria)
+- [26. Team Plan](#26-team-plan)
+- [27. Roadmap](#27-roadmap)
+- [28. Troubleshooting](#28-troubleshooting)
+- [29. Contribution Rules](#29-contribution-rules)
+- [30. Responsible Use](#30-responsible-use)
+- [31. License and Data Policy](#31-license-and-data-policy)
 
 ---
 
-## 2. Our Proposed Solution
+## 1. Project Vision
 
-We propose **SovereignAI Workbench**, a local agentic AI platform with five major layers:
+Industrial organizations have large collections of confidential documents and need reliable assistance with document-heavy work. Conventional chatbots usually answer a single question, have limited understanding of images and scans, depend on cloud APIs, and do not create complete business deliverables.
 
-1. **Document ingestion:** Upload PDFs, images, office files, and text documents.
-2. **Multimodal understanding:** Use local OCR, vision models, and language models.
-3. **Knowledge grounding:** Search local manuals, SOPs, templates, and past correspondence.
-4. **Agentic execution:** Plan and execute multi-step tasks with visible progress and logs.
-5. **Deliverable generation:** Create approval notes, reports, spreadsheets, summaries, and code.
-
-### Example
+Our vision is to provide a **private digital workbench** where an authorized user can submit an industrial task and receive a traceable result:
 
 ```text
-Upload scanned inspection report
-        ↓
-Local OCR and image understanding
-        ↓
-Extract findings and measurements
-        ↓
-Search relevant local SOPs and manuals
-        ↓
-Check findings against procedures
-        ↓
-Draft approval note and action list
-        ↓
-Generate Word/PDF/Excel deliverables
-        ↓
-Display complete audit and network logs
+User request + local documents
+          ↓
+Task planning and model selection
+          ↓
+OCR, vision, parsing and local retrieval
+          ↓
+Agentic reasoning and tool execution
+          ↓
+Validation and human review
+          ↓
+DOCX / XLSX / PDF / code deliverable
+          ↓
+Audit trail and sovereignty proof
 ```
 
 ---
 
-## 3. Objectives
+## 2. Problem Understanding
 
-- Build a fully local AI assistant for confidential industrial workflows.
-- Support at least two different task types.
-- Demonstrate multimodal document understanding.
-- Ground every answer in the local knowledge base where applicable.
-- Generate useful files instead of only chat responses.
-- Run with open-weight models and local embeddings.
-- Prevent and visibly verify external calls.
-- Preserve an audit trail for every upload, model call, tool call, and generated file.
+The system must satisfy the following challenge:
 
----
+- Search and reason over internal documents.
+- Handle more than plain text: scanned PDFs, handwritten notes, engineering drawings and photographs.
+- Use OCR and vision models locally.
+- Continue through a task instead of stopping after a single answer.
+- Produce real files and outputs, not only chat messages.
+- Ground its work in local manuals, SOPs and past correspondence.
+- Run on a workstation or server without external calls.
+- Demonstrate through logs or a visible network monitor that no data leaves the environment.
+- Select appropriate local models for different task types and available hardware.
 
-## 4. Core Features
+### Core example
 
-### 4.1 Multimodal document ingestion
-
-Supported initial formats:
-
-- PDF and scanned PDF
-- PNG, JPG, and JPEG images
-- DOCX and XLSX
-- TXT, CSV, and Markdown
-
-Processing capabilities:
-
-- File type detection
-- Page rendering
-- OCR for scanned content
-- Image preprocessing
-- Table extraction
-- Metadata extraction
-- Document chunking
-
-### 4.2 Local OCR and vision
-
-- OCR scanned pages and handwritten notes where supported.
-- Analyze photographs and diagrams with a local vision model.
-- Preserve page numbers and source references.
-- Show extracted text for user verification.
-
-### 4.3 Local knowledge base
-
-The knowledge base may contain:
-
-- Standard Operating Procedures
-- Technical manuals
-- Safety instructions
-- Report templates
-- Approval formats
-- Historical correspondence
-- Public sample documents for demonstration
-
-Documents are embedded locally and stored in a local vector index. No document is uploaded to a hosted AI service.
-
-### 4.4 Agentic task execution
-
-The agent should:
-
-1. Understand the user request.
-2. Select an appropriate local model and tools.
-3. Create a task plan.
-4. Retrieve relevant local knowledge.
-5. Process the input documents.
-6. Validate intermediate results.
-7. Generate the requested deliverable.
-8. Present sources, actions, warnings, and logs.
-
-### 4.5 Deliverable generation
-
-The MVP should generate:
-
-- Approval notes in DOCX
-- Findings and action lists in XLSX
-- Final reports in PDF
-- JSON summaries
-- Code files and test files for coding tasks
-
-### 4.6 Sovereignty dashboard
-
-The dashboard should display:
-
-- Current network mode
-- Allowed local endpoints
-- Blocked outbound requests
-- Model and tool calls
-- File access history
-- Task execution timeline
-- Exportable audit logs
+A user uploads a scanned inspection report. The system reads the report, extracts findings, retrieves the relevant local SOP, compares the findings with the procedure, prepares an approval note, generates an action tracker, and records every step.
 
 ---
 
-## 5. Demonstration Scenario
+## 3. Proposed Solution
 
-### Scenario A: Inspection report to approval note
+The platform consists of the following modules:
 
-**Input:** A scanned inspection report containing typed text, a table, and handwritten remarks.
+1. **Workbench UI** — document upload, task creation, progress, outputs and logs.
+2. **API gateway** — authentication, validation, task APIs and file APIs.
+3. **Document pipeline** — OCR, image preprocessing, table extraction and parsing.
+4. **Local model gateway** — a consistent interface for local LLM, vision and embedding models.
+5. **Agent orchestrator** — planning, tool selection, execution, retries and checkpoints.
+6. **Knowledge base** — local indexing and retrieval of manuals, SOPs and templates.
+7. **Output generator** — DOCX, XLSX, PDF, JSON and code generation.
+8. **Sandbox** — restricted execution for generated code.
+9. **Security layer** — offline enforcement, network monitoring, audit logs and access control.
 
-**Task:**
-
-- Read and OCR the report.
-- Extract equipment name, inspection date, findings, severity, and recommendations.
-- Search the local SOP repository.
-- Compare the findings with the applicable procedure.
-- Create an approval note in DOCX.
-- Create an action tracker in XLSX.
-- Produce a final PDF report.
-
-**Expected result:** The evaluator can see the input, agent plan, source references, generated files, and complete audit log.
-
-### Scenario B: Multimodal coding task
-
-**Input:** A technical specification or diagram.
-
-**Task:**
-
-- Read the specification locally.
-- Extract requirements.
-- Generate a code skeleton.
-- Generate unit tests.
-- Run the code in a restricted sandbox.
-- Return the files and execution result.
-
-**Expected result:** Code is generated, tested locally, and no external service is contacted.
+The architecture is model-agnostic. The implementation must be able to use smaller models when GPU hardware is not available and larger models when additional resources are present.
 
 ---
 
-## 6. System Architecture
+## 4. Goals and Non-Goals
+
+### Goals
+
+- Deliver a working local prototype for SIH evaluation.
+- Demonstrate at least two different task types.
+- Process multimodal sample documents.
+- Use open-weight models running locally.
+- Retrieve information from a local knowledge base.
+- Generate at least one useful business document.
+- Show complete task and network logs.
+- Provide reproducible setup and demo scripts.
+
+### Non-goals for the first MVP
+
+- Fully replacing a certified industrial approval system.
+- Autonomous final approval of safety-critical decisions.
+- Production-scale deployment across every MRPL site.
+- Training a foundation model from scratch.
+- Uploading real confidential documents to this repository.
+- Allowing unrestricted shell access or unrestricted code execution.
+
+---
+
+## 5. Complete Requirements
+
+### 5.1 Required MVP capabilities
+
+- [ ] Upload PDF, image, DOCX, XLSX and text files.
+- [ ] Detect whether a PDF contains selectable text or scanned pages.
+- [ ] Run local OCR on scanned pages.
+- [ ] Preserve page numbers and document references.
+- [ ] Process images and photographs using a local vision model.
+- [ ] Extract text, tables, metadata and basic structured fields.
+- [ ] Index local manuals, SOPs and templates.
+- [ ] Perform semantic retrieval from the local knowledge base.
+- [ ] Create and display an agent plan before execution.
+- [ ] Execute multi-step tasks with visible progress.
+- [ ] Use local tools for calculations, file operations and retrieval.
+- [ ] Generate DOCX approval notes.
+- [ ] Generate XLSX action trackers.
+- [ ] Generate PDF summaries.
+- [ ] Generate JSON output for integrations.
+- [ ] Support a restricted coding task if code generation is included.
+- [ ] Require human review before finalizing sensitive deliverables.
+- [ ] Record all task, model, tool, file and security events.
+- [ ] Prove that external network access is disabled.
+- [ ] Run using public sample data without proprietary documents.
+
+### 5.2 Recommended enhanced capabilities
+
+- [ ] Handwriting confidence scores.
+- [ ] Table and diagram understanding.
+- [ ] Multiple local model profiles.
+- [ ] Model auto-selection based on task type and hardware.
+- [ ] User and role management.
+- [ ] Versioned prompts and templates.
+- [ ] Document-level access permissions.
+- [ ] Human correction of OCR output.
+- [ ] Citation and evidence panel.
+- [ ] Replay of completed tasks.
+- [ ] Exportable audit package.
+- [ ] LoRA or organization-specific adapters in a controlled environment.
+- [ ] Local multilingual support.
+
+---
+
+## 6. Functional Requirements
+
+### FR-01: User authentication
+
+The system shall authenticate users locally and enforce role-based permissions.
+
+### FR-02: File upload
+
+The system shall accept supported files, validate file type and size, calculate a checksum, store the original safely, and create metadata.
+
+### FR-03: Document extraction
+
+The system shall determine the correct extraction path: direct text extraction, OCR, image processing, table extraction or multimodal analysis.
+
+### FR-04: Knowledge ingestion
+
+An administrator shall be able to add local manuals, SOPs, templates and approved sample correspondence to the knowledge base.
+
+### FR-05: Retrieval
+
+The system shall return relevant chunks with source file, page number, score and text evidence.
+
+### FR-06: Task planning
+
+The agent shall convert a user request into a visible, ordered plan with tools and expected outputs.
+
+### FR-07: Task execution
+
+The agent shall execute steps, save intermediate results, retry safe failures and stop for human review when required.
+
+### FR-08: Model selection
+
+The platform shall support configurable local models for text, vision and embeddings and select a suitable profile for a task.
+
+### FR-09: Deliverable generation
+
+The platform shall create files from structured results and templates while preserving traceability to the input documents.
+
+### FR-10: Human review
+
+Users shall be able to inspect extracted facts, citations, warnings and generated files before finalization.
+
+### FR-11: Audit logging
+
+The system shall log who performed an action, when it occurred, what input was used, what model/tool ran, what output was produced and whether an error occurred.
+
+### FR-12: Sovereignty verification
+
+The system shall display local network status and record blocked or attempted outbound connections.
+
+### FR-13: Failure handling
+
+The system shall show actionable errors for unsupported files, OCR failures, unavailable models, invalid outputs and tool timeouts.
+
+---
+
+## 7. Non-Functional Requirements
+
+### Security
+
+- No external AI APIs.
+- No telemetry or analytics that transmit documents.
+- Secrets supplied through environment variables or a secret manager.
+- Encryption at rest and in transit where appropriate.
+- Least-privilege service accounts.
+- Sandboxed generated code.
+- Complete audit trail.
+
+### Privacy
+
+- Process data locally.
+- Support retention and deletion policies.
+- Avoid copying sensitive content into application logs.
+- Mask secrets and personal data in error messages.
+
+### Reliability
+
+- Recoverable task state.
+- Idempotent ingestion and task operations.
+- Retry policies for safe operations.
+- Health endpoints for all services.
+
+### Performance targets for the MVP
+
+- Upload acknowledgement: under 2 seconds for normal files.
+- Text extraction: visible progress and no silent blocking.
+- First task update: under 10 seconds after task start.
+- The interface must remain responsive during processing.
+- Exact inference time depends on hardware and model size.
+
+### Usability
+
+- Clear task status: queued, running, waiting for review, completed or failed.
+- Source citations next to extracted facts.
+- Downloadable outputs.
+- Useful error messages.
+- Demo operation possible by a non-developer.
+
+### Maintainability
+
+- Modular services.
+- Typed API schemas.
+- Automated tests.
+- Configuration through environment variables.
+- Documentation for every public module.
+
+---
+
+## 8. User Roles
+
+| Role | Permissions |
+|---|---|
+| Viewer | View approved tasks and outputs |
+| Operator | Upload documents and run approved task templates |
+| Reviewer | Inspect evidence and approve or reject outputs |
+| Knowledge Administrator | Add, remove and re-index local knowledge |
+| System Administrator | Configure models, security and users |
+| Auditor | View security and audit logs without changing data |
+
+For the MVP, role handling may be simplified, but the permission boundaries must be documented.
+
+---
+
+## 9. End-to-End Workflow
+
+### Document-to-deliverable workflow
+
+1. User signs in.
+2. User uploads a document.
+3. Backend validates the file and calculates its checksum.
+4. The document pipeline identifies the content type.
+5. OCR, parser or vision processing extracts content.
+6. User reviews extraction if confidence is low.
+7. User chooses a task template or enters a task request.
+8. Agent planner creates an execution plan.
+9. Retrieval tool searches local manuals and SOPs.
+10. Agent analyzes the input and evidence.
+11. Agent creates a structured result.
+12. Output generator creates DOCX, XLSX or PDF.
+13. Reviewer checks facts, evidence and warnings.
+14. System finalizes the output.
+15. Audit and sovereignty logs are exported.
+
+### Task state machine
 
 ```text
-┌────────────────────────────────────────────────────────────┐
-│                    Web User Interface                       │
-│ Upload • Task Builder • Progress • Outputs • Audit Logs    │
-└──────────────────────────┬─────────────────────────────────┘
-                           │ HTTP/WebSocket
-┌──────────────────────────▼─────────────────────────────────┐
-│                    FastAPI Backend                          │
-│ Auth • Jobs • Files • Agent API • Network Status            │
-└───────────────┬───────────────────┬────────────────────────┘
-                │                   │
-┌───────────────▼────────┐  ┌──────▼─────────────────────────┐
-│ Agent Orchestrator      │  │ Document Processing Pipeline    │
-│ Planner • Tools • State │  │ OCR • Vision • Parsing • Tables │
-└───────────────┬────────┘  └──────┬─────────────────────────┘
-                │                   │
-┌───────────────▼───────────────────▼─────────────────────────┐
-│                    Local AI Services                         │
-│ Open-weight LLM • Vision Model • Embedding Model • Reranker │
-└───────────────┬───────────────────┬─────────────────────────┘
-                │                   │
-┌───────────────▼────────┐  ┌──────▼─────────────────────────┐
-│ Local Knowledge Base    │  │ Local Storage and Audit Logs    │
-│ Vector Index • Metadata │  │ Inputs • Outputs • Events       │
-└────────────────────────┘  └──────────────────────────────────┘
+CREATED → QUEUED → RUNNING → WAITING_FOR_REVIEW → COMPLETED
+                         │                    │
+                         ├→ FAILED            └→ REJECTED
+                         └→ CANCELLED
 ```
-
-### Design principles
-
-- Local-first and offline-capable.
-- Least-privilege tool access.
-- Human approval before sensitive actions.
-- Explainable execution with source references.
-- Reproducible model and prompt configuration.
-- No unrestricted code execution.
 
 ---
 
-## 7. Technology Stack
+## 10. Demonstration Use Cases
 
-| Layer | Recommended technology | Purpose |
+### Use Case A: Inspection report to approval note
+
+**Input:** Scanned inspection report with typed text, tables and handwritten annotations.
+
+**Steps:**
+
+1. OCR the report.
+2. Extract equipment, date, findings, severity and recommendations.
+3. Retrieve relevant SOP sections.
+4. Compare findings with the SOP.
+5. Highlight missing or uncertain information.
+6. Generate a DOCX approval note.
+7. Generate an XLSX action tracker.
+8. Generate a PDF summary.
+9. Show source pages and audit logs.
+
+### Use Case B: Engineering drawing and specification analysis
+
+**Input:** Public sample drawing and technical specification.
+
+**Steps:**
+
+1. Render drawing pages locally.
+2. Use a local vision model to identify labels and relevant regions.
+3. Extract requirements from the specification.
+4. Compare drawing information with the requirements.
+5. Produce a structured discrepancy report.
+
+### Use Case C: Local coding assistant
+
+**Input:** Public sample specification or scanned requirement document.
+
+**Steps:**
+
+1. Extract requirements.
+2. Generate a Python code skeleton.
+3. Generate tests.
+4. Run inside a restricted sandbox.
+5. Display test results and generated files.
+6. Block network access during execution.
+
+### Use Case D: Compliance review
+
+**Input:** Local policy, checklist and sample audit evidence.
+
+**Output:** Compliance matrix, missing evidence list and draft report with citations.
+
+---
+
+## 11. System Architecture
+
+```text
+┌──────────────────────────────────────────────────────────────┐
+│                         Web Workbench                         │
+│ Upload │ Task Builder │ Progress │ Evidence │ Outputs │ Logs │
+└──────────────────────────┬───────────────────────────────────┘
+                           │
+┌──────────────────────────▼───────────────────────────────────┐
+│                      API and Auth Layer                       │
+│ FastAPI │ Validation │ RBAC │ File API │ Task API │ WebSocket│
+└─────────────┬────────────────────┬───────────────────────────┘
+              │                    │
+┌─────────────▼──────────┐ ┌───────▼──────────────────────────┐
+│ Agent Orchestrator      │ │ Multimodal Document Pipeline      │
+│ Planner │ State │ Tools │ │ OCR │ Vision │ PDF │ Tables │ Text │
+└─────────────┬──────────┘ └───────┬──────────────────────────┘
+              │                    │
+┌─────────────▼────────────────────▼───────────────────────────┐
+│                         Local Model Gateway                   │
+│ Text LLM │ Vision LLM │ Embeddings │ Reranker │ Model Router │
+└─────────────┬────────────────────┬──────────────────────────┘
+              │                    │
+┌─────────────▼──────────┐ ┌───────▼──────────────────────────┐
+│ Local Knowledge Base    │ │ Storage, Outputs and Audit        │
+│ Files │ Chunks │ Vector │ │ SQLite/Postgres │ Files │ Events   │
+└────────────────────────┘ └───────────────────────────────────┘
+              │
+┌─────────────▼────────────────────────────────────────────────┐
+│                 Offline Security and Monitoring               │
+│ Firewall │ Network Monitor │ Sandboxed Code │ Integrity Logs │
+└──────────────────────────────────────────────────────────────┘
+```
+
+### Architecture rules
+
+- The model gateway is the only component that can call model services.
+- Model services must be local addresses or Unix sockets.
+- The knowledge base must never require a cloud endpoint.
+- The code runner must run with network access disabled.
+- All important state transitions must be auditable.
+
+---
+
+## 12. Technology Stack
+
+| Layer | MVP choice | Alternatives |
 |---|---|---|
-| Frontend | React, Vite, TypeScript | Dashboard and task interface |
-| Backend | Python, FastAPI | REST API and orchestration |
-| LLM serving | Ollama or llama.cpp | Local open-weight inference |
-| Language model | A suitable local instruct model | Text reasoning and generation |
-| Vision model | Local vision-language model | Images and scanned documents |
-| OCR | Tesseract or PaddleOCR | Text extraction |
-| Embeddings | Sentence Transformers | Local semantic embeddings |
-| Vector store | FAISS or Chroma | Local knowledge retrieval |
-| Document parsing | PyMuPDF, python-docx, openpyxl | File processing |
-| Output generation | python-docx, openpyxl, ReportLab | Deliverables |
-| Database | SQLite for MVP, PostgreSQL later | Metadata and task state |
-| Sandbox | Docker or restricted subprocess | Safe code execution |
-| Deployment | Docker Compose | Reproducible local deployment |
-| Monitoring | Structured logs and network monitor | Sovereignty evidence |
+| Frontend | React + TypeScript + Vite | Vue, Svelte |
+| API | Python + FastAPI | Flask |
+| Database | SQLite | PostgreSQL |
+| Local LLM runtime | Ollama or llama.cpp | vLLM in an isolated environment |
+| Text model | Locally available open-weight instruct model | Another compatible model |
+| Vision | Local vision-language model | Local OCR plus image model |
+| OCR | Tesseract or PaddleOCR | EasyOCR |
+| PDF | PyMuPDF | pypdf, pdfplumber |
+| DOCX | python-docx | LibreOffice headless |
+| XLSX | openpyxl | pandas plus xlsxwriter |
+| PDF output | ReportLab | LibreOffice headless |
+| Embeddings | Sentence Transformers | Local embedding runtime |
+| Vector store | FAISS or Chroma | Qdrant on-premise |
+| Queue | FastAPI background tasks for MVP | Celery + Redis/RabbitMQ |
+| Sandbox | Docker with no network | gVisor or restricted subprocess |
+| Deployment | Docker Compose | Kubernetes |
+| Testing | Pytest, Vitest/Playwright | Jest |
 
-Model selection must depend on available hardware. Do not assume that a particular model or GPU is available at the venue.
+### Model policy
+
+The exact model is configurable. Select based on:
+
+- Available CPU, RAM, GPU and VRAM.
+- Required context length.
+- OCR and vision capability.
+- Inference speed.
+- License suitability.
+- Offline availability.
+- Quality on the project sample set.
+
+Do not download models during the final offline demo.
 
 ---
 
-## 8. Project Structure
+## 13. Repository Structure
 
 ```text
 .
 ├── README.md
+├── .env.example
+├── .gitignore
+├── LICENSE
+├── docker-compose.yml
 ├── backend/
 │   ├── app/
 │   │   ├── main.py
 │   │   ├── config.py
 │   │   ├── api/
+│   │   │   ├── auth.py
+│   │   │   ├── documents.py
+│   │   │   ├── tasks.py
+│   │   │   ├── knowledge.py
+│   │   │   └── security.py
 │   │   ├── agents/
+│   │   │   ├── planner.py
+│   │   │   ├── executor.py
+│   │   │   ├── state.py
+│   │   │   └── tools.py
 │   │   ├── documents/
-│   │   ├── knowledge_base/
+│   │   │   ├── ingestion.py
+│   │   │   ├── ocr.py
+│   │   │   ├── vision.py
+│   │   │   ├── tables.py
+│   │   │   └── parsers.py
 │   │   ├── models/
+│   │   │   ├── gateway.py
+│   │   │   ├── profiles.py
+│   │   │   └── prompts.py
+│   │   ├── knowledge_base/
+│   │   │   ├── indexer.py
+│   │   │   ├── retriever.py
+│   │   │   └── citations.py
 │   │   ├── outputs/
+│   │   │   ├── docx.py
+│   │   │   ├── xlsx.py
+│   │   │   ├── pdf.py
+│   │   │   └── json.py
 │   │   ├── security/
-│   │   └── audit/
+│   │   │   ├── audit.py
+│   │   │   ├── network.py
+│   │   │   ├── sandbox.py
+│   │   │   └── integrity.py
+│   │   └── storage/
+│   │       ├── database.py
+│   │       ├── files.py
+│   │       └── repositories.py
 │   ├── requirements.txt
 │   └── Dockerfile
 ├── frontend/
@@ -295,7 +526,8 @@ Model selection must depend on available hardware. Do not assume that a particul
 │   │   ├── components/
 │   │   ├── pages/
 │   │   ├── services/
-│   │   └── types/
+│   │   ├── types/
+│   │   └── App.tsx
 │   ├── package.json
 │   └── Dockerfile
 ├── knowledge_base/
@@ -303,48 +535,99 @@ Model selection must depend on available hardware. Do not assume that a particul
 │   ├── sops/
 │   ├── templates/
 │   └── sample_documents/
-├── outputs/
 ├── data/
+│   ├── inputs/.gitkeep
+│   ├── outputs/.gitkeep
+│   ├── vector_store/.gitkeep
+│   └── audit/.gitkeep
 ├── tests/
 │   ├── unit/
 │   ├── integration/
-│   └── e2e/
+│   ├── e2e/
+│   └── fixtures/
 ├── scripts/
+│   ├── bootstrap.sh
 │   ├── ingest_knowledge.py
 │   ├── run_demo.py
+│   ├── run_tests.sh
 │   └── verify_offline_mode.sh
 ├── deployment/
-│   └── docker-compose.yml
+│   ├── docker-compose.dev.yml
+│   ├── docker-compose.prod.yml
+│   └── firewall/
 └── docs/
     ├── ARCHITECTURE.md
     ├── API.md
+    ├── SETUP.md
     ├── SECURITY.md
-    └── DEMO_SCRIPT.md
+    ├── DEMO_SCRIPT.md
+    └── TROUBLESHOOTING.md
 ```
 
-Never commit confidential organizational documents, credentials, model weights, generated outputs containing sensitive data, or private correspondence.
+The directories describe the target architecture. Add files incrementally and keep the structure synchronized with implementation.
 
 ---
 
-## 9. Local Setup
+## 14. Hardware and Software Requirements
 
-### Requirements
+### Minimum development machine
 
-- Python 3.10 or newer
-- Node.js 20 or newer
-- Docker and Docker Compose
-- At least 16 GB RAM for a basic demonstration
-- Additional RAM/VRAM according to the selected local model
-- Linux recommended; Windows users may use WSL2
+- 64-bit operating system.
+- 4 CPU cores.
+- 16 GB RAM.
+- 50 GB free disk space, excluding model storage.
+- Python 3.10+.
+- Node.js 20+.
+- Docker 24+ and Docker Compose.
+- Internet access only during initial dependency and model preparation.
 
-### Clone the repository
+### Recommended demo machine
+
+- 8 or more CPU cores.
+- 32 GB RAM.
+- NVIDIA GPU with adequate VRAM, if available.
+- 100 GB or more free SSD space.
+- Linux or a Linux virtual machine.
+- Local network isolation or outbound firewall rules.
+
+### CPU-only fallback
+
+- Use a smaller quantized model.
+- Use OCR plus text processing when vision inference is too slow.
+- Reduce image resolution and document batch size.
+- Use a smaller embedding model.
+- Pre-index all demonstration knowledge before the event.
+
+### Required software
+
+- Git.
+- Python and virtual environment support.
+- Node.js and npm.
+- Docker and Docker Compose.
+- OCR engine.
+- Local model runtime.
+- A PDF viewer and office document viewer for checking outputs.
+
+---
+
+## 15. Installation Guide
+
+### 15.1 Clone the repository
 
 ```bash
 git clone https://github.com/jeevanhs06/SIH2026-MRPL-SovereignAI-Workbench.git
 cd SIH2026-MRPL-SovereignAI-Workbench
 ```
 
-### Backend
+### 15.2 Create local configuration
+
+```bash
+cp .env.example .env
+```
+
+Never commit `.env`.
+
+### 15.3 Backend setup
 
 ```bash
 cd backend
@@ -356,313 +639,787 @@ source .venv/bin/activate
 # Windows PowerShell
 # .venv\Scripts\Activate.ps1
 
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### Frontend
+### 15.4 Frontend setup
 
 ```bash
 cd frontend
 npm install
 ```
 
-### Local model service
+### 15.5 Install local OCR
 
-Install and configure the selected local model runtime according to the project setup guide. Models must be downloaded before the offline demonstration and loaded from local storage.
-
-### Environment variables
-
-Create a local `.env` file from `.env.example`. Do not commit it.
-
-```env
-APP_ENV=development
-API_HOST=127.0.0.1
-API_PORT=8000
-DATABASE_URL=sqlite:///./data/workbench.db
-MODEL_BASE_URL=http://127.0.0.1:11434
-VECTOR_STORE_PATH=./data/vector_store
-INPUT_DIR=./data/inputs
-OUTPUT_DIR=./data/outputs
-AUDIT_LOG_PATH=./data/audit.log
-OFFLINE_MODE=true
-ALLOW_EXTERNAL_NETWORK=false
-```
-
-### Start the development services
+Install the selected OCR engine on the host or include it in the backend container. Verify it:
 
 ```bash
-# Terminal 1
+tesseract --version
+```
+
+### 15.6 Prepare the local model runtime
+
+Install the selected local runtime and download compatible models while internet access is available. Record model names, checksums, versions and licenses in `docs/MODELS.md`. Test inference before going offline.
+
+### 15.7 Start services locally
+
+```bash
+# Backend
 cd backend
 source .venv/bin/activate
 uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 
-# Terminal 2
+# Frontend in another terminal
 cd frontend
 npm run dev
 ```
 
-The exact commands may change as implementation files are added. Keep `docs/SETUP.md` updated whenever setup changes.
+Expected local endpoints:
 
----
+- Frontend: `http://127.0.0.1:5173`
+- Backend: `http://127.0.0.1:8000`
+- API documentation: `http://127.0.0.1:8000/docs`
 
-## 10. Usage Workflow
-
-1. Open the local dashboard.
-2. Upload a public sample document.
-3. Select a task template.
-4. Review the generated plan.
-5. Start the task.
-6. Watch OCR, retrieval, model, and file-generation steps.
-7. Review cited source documents and extracted data.
-8. Download the generated deliverables.
-9. Open the sovereignty dashboard.
-10. Export the audit log for the demo.
-
-### Sample task definition
-
-```json
-{
-  "name": "Inspection report to approval note",
-  "input_files": ["inspection_report.pdf"],
-  "steps": [
-    "extract_text_and_tables",
-    "analyze_findings",
-    "retrieve_relevant_sops",
-    "validate_against_sop",
-    "generate_docx_approval_note",
-    "generate_xlsx_action_tracker",
-    "generate_pdf_summary"
-  ],
-  "require_human_review": true
-}
-```
-
----
-
-## 11. API Plan
-
-Planned endpoints:
-
-| Method | Endpoint | Purpose |
-|---|---|---|
-| `GET` | `/health` | Service health |
-| `POST` | `/api/documents` | Upload a document |
-| `GET` | `/api/documents/{id}` | Document metadata and extracted text |
-| `POST` | `/api/knowledge/index` | Index local knowledge files |
-| `POST` | `/api/tasks` | Create an agentic task |
-| `GET` | `/api/tasks/{id}` | Get task status |
-| `GET` | `/api/tasks/{id}/events` | Get task events |
-| `GET` | `/api/tasks/{id}/outputs` | List generated files |
-| `GET` | `/api/audit` | Query audit events |
-| `GET` | `/api/security/network-status` | Show network status |
-
-API contracts should be documented in `docs/API.md` and tested using automated integration tests.
-
----
-
-## 12. Security and Sovereignty
-
-### Required controls
-
-- Bind development services to localhost by default.
-- Deny outbound traffic in the demonstration environment.
-- Use only local model endpoints.
-- Disable telemetry in dependencies where possible.
-- Store credentials outside the repository.
-- Validate file type and size before processing.
-- Scan uploads before parsing.
-- Restrict generated code execution inside a sandbox.
-- Apply role-based access for sensitive operations.
-- Log every model, tool, file, and network event.
-- Require human confirmation before final approval or external action.
-
-### Demonstrating no external calls
-
-The demo must show more than a written claim. Prepare:
-
-- Firewall rules blocking outbound traffic.
-- A network monitor showing only loopback/local connections.
-- Application logs containing model and tool endpoints.
-- A failed external-request test demonstrating that outbound traffic is blocked.
-- A repeatable verification script.
-
-Example checks:
+### 15.8 Docker setup
 
 ```bash
-# Inspect listening services
-ss -tulpn
-
-# Inspect active connections during a task
-ss -tpn
-
-# Run the project-specific verification script
-bash scripts/verify_offline_mode.sh
+docker compose up --build
 ```
 
-Use a controlled test environment and obtain team approval before changing firewall rules.
+The production-like compose file must use local volumes, health checks, restricted permissions and no unnecessary outbound network access.
 
 ---
 
-## 13. Team Responsibilities
+## 16. Configuration
 
-| Role | Responsibilities |
-|---|---|
-| Team lead | Scope, integration, presentation, submission |
-| Backend engineer | APIs, task state, orchestration, storage |
-| AI/ML engineer | Model serving, prompts, OCR, vision, retrieval |
-| Frontend engineer | Dashboard, upload flow, progress, outputs |
-| Security/DevOps engineer | Docker, offline mode, sandbox, network evidence |
-| Documentation/demo owner | Test data, scripts, screenshots, pitch, README |
+Create `.env` from `.env.example`:
 
-Each teammate should create a feature branch and open a pull request for review. Avoid directly pushing unfinished changes to `main`.
+```env
+APP_ENV=development
+APP_NAME=SovereignAI-Workbench
+API_HOST=127.0.0.1
+API_PORT=8000
+FRONTEND_ORIGIN=http://127.0.0.1:5173
 
-### Suggested branch names
+DATABASE_URL=sqlite:///./data/workbench.db
+INPUT_DIR=./data/inputs
+OUTPUT_DIR=./data/outputs
+TEMP_DIR=./data/tmp
+AUDIT_LOG_PATH=./data/audit/audit.jsonl
+
+MODEL_RUNTIME=local
+MODEL_BASE_URL=http://127.0.0.1:11434
+TEXT_MODEL=local-text-model
+VISION_MODEL=local-vision-model
+EMBEDDING_MODEL=local-embedding-model
+VECTOR_STORE_PATH=./data/vector_store
+
+OFFLINE_MODE=true
+ALLOW_EXTERNAL_NETWORK=false
+MAX_UPLOAD_MB=100
+CODE_EXECUTION_TIMEOUT_SECONDS=30
+REQUIRE_HUMAN_REVIEW=true
+LOG_LEVEL=INFO
+```
+
+### Configuration rules
+
+- `ALLOW_EXTERNAL_NETWORK` must remain `false` for the demo.
+- Bind services to localhost unless remote access is explicitly required.
+- Do not hard-code passwords, API keys or tokens.
+- Validate all model endpoints against an allowlist.
+- Treat model files and prompts as versioned project assets.
+
+---
+
+## 17. Development Guide
+
+### Branching
+
+```bash
+git checkout main
+git pull origin main
+git checkout -b feature/document-ingestion
+```
+
+Suggested branches:
 
 ```text
 feature/document-ingestion
-feature/agent-orchestrator
+feature/ocr-pipeline
+feature/local-model-gateway
 feature/knowledge-retrieval
+feature/agent-orchestrator
+feature/output-generation
 feature/frontend-dashboard
 feature/security-monitor
 feature/demo-workflow
 ```
 
----
+### Development order
 
-## 14. Development Roadmap
+1. Health endpoint and configuration.
+2. File upload and local storage.
+3. Text extraction and OCR.
+4. Local model adapter.
+5. Knowledge indexing and retrieval.
+6. Agent planning and task execution.
+7. DOCX/XLSX/PDF generation.
+8. Frontend progress and evidence views.
+9. Offline controls and audit proof.
+10. End-to-end demo and documentation.
 
-### Phase 1 — Foundation
+### Coding standards
 
-- [ ] Repository and development conventions
-- [ ] FastAPI health endpoint
-- [ ] React dashboard shell
-- [ ] Local file storage
-- [ ] Basic logging
+- Use type hints in Python.
+- Use Pydantic schemas for API input and output.
+- Keep business logic outside route handlers.
+- Add tests for every new processing path.
+- Avoid logging document contents by default.
+- Use structured errors and stable error codes.
+- Document assumptions and limitations.
 
-### Phase 2 — Document pipeline
+### Useful commands
 
-- [ ] PDF and image upload
-- [ ] OCR extraction
-- [ ] Page and source tracking
-- [ ] Text and table extraction
-- [ ] Document preview
+```bash
+# Backend tests
+pytest -q
 
-### Phase 3 — Local AI and knowledge base
+# Backend formatting/linting, when configured
+ruff check .
 
-- [ ] Local model adapter
-- [ ] Embedding generation
-- [ ] Vector retrieval
-- [ ] SOP/manual ingestion
-- [ ] Citation display
+# Frontend lint and tests
+npm run lint
+npm run test
 
-### Phase 4 — Agent and deliverables
+# Frontend production build
+npm run build
 
-- [ ] Task planning
-- [ ] Tool execution
-- [ ] Human approval checkpoint
-- [ ] DOCX generation
-- [ ] XLSX and PDF generation
-- [ ] Coding-task sandbox
-
-### Phase 5 — Sovereignty proof and polish
-
-- [ ] Outbound traffic block
-- [ ] Network monitor
-- [ ] Complete audit trail
-- [ ] End-to-end tests
-- [ ] Demo script
-- [ ] Final presentation
+# Docker status
+docker compose ps
+```
 
 ---
 
-## 15. Evaluation and Demo Checklist
+## 18. Knowledge Base Setup
 
-Before presenting, verify:
+### Supported knowledge sources
 
-- [ ] The application runs without internet access.
-- [ ] At least one scanned or image-based document is processed.
-- [ ] At least two task types are demonstrated.
-- [ ] A local knowledge-base document is retrieved.
-- [ ] The agent shows an intermediate plan and progress.
-- [ ] At least one DOCX, XLSX, or PDF deliverable is generated.
-- [ ] Generated output includes source references or evidence.
-- [ ] A coding task runs inside a restricted sandbox, if implemented.
-- [ ] Network logs visibly prove local-only operation.
-- [ ] No real confidential data is included in the public repository.
-- [ ] The system can recover from OCR, model, and file errors.
-- [ ] Team members can explain their components.
+- Public sample SOPs.
+- Public technical manuals.
+- Public document templates.
+- Synthetic inspection reports.
+- Synthetic correspondence.
+- Public engineering sample documents.
 
-### Five-minute demo flow
+### Ingestion process
 
-1. Explain the confidentiality problem.
-2. Show the local-only architecture.
-3. Upload a sample scanned inspection report.
+1. Copy approved documents into `knowledge_base/`.
+2. Validate file type and checksum.
+3. Extract text, tables and page metadata.
+4. Split content into meaningful chunks.
+5. Generate embeddings locally.
+6. Store vectors and metadata locally.
+7. Run retrieval quality tests.
+8. Record source version and ingestion time.
+
+### Chunk metadata
+
+Each chunk should include:
+
+```json
+{
+  "document_id": "doc-001",
+  "filename": "sample_sop.pdf",
+  "page": 4,
+  "section": "Inspection frequency",
+  "checksum": "sha256:...",
+  "text": "...",
+  "embedding_model": "local-embedding-model"
+}
+```
+
+### Retrieval requirements
+
+- Return source filename and page number.
+- Return evidence text.
+- Show retrieval score or rank.
+- Never present retrieved text as an approved instruction without human review.
+- Make it clear when the answer is based on general model knowledge rather than the knowledge base.
+
+---
+
+## 19. Agent and Tool Design
+
+### Agent loop
+
+```text
+Receive task
+   ↓
+Validate input and permissions
+   ↓
+Create plan
+   ↓
+Select model and tools
+   ↓
+Execute one step
+   ↓
+Validate result
+   ├── retry or ask for clarification
+   └── continue
+   ↓
+Generate deliverable
+   ↓
+Request human review
+   ↓
+Finalize and audit
+```
+
+### Approved initial tools
+
+- `extract_document_text`
+- `run_ocr`
+- `analyze_image`
+- `retrieve_knowledge`
+- `calculate`
+- `create_docx`
+- `create_xlsx`
+- `create_pdf`
+- `write_json`
+- `run_sandboxed_code`
+- `record_audit_event`
+
+### Tool safety rules
+
+- Validate tool arguments.
+- Restrict file paths to approved directories.
+- Reject path traversal.
+- Apply timeouts and output-size limits.
+- Do not allow unrestricted shell commands.
+- Disable network access for code execution.
+- Require review for high-impact outputs.
+- Keep tool calls visible in the UI.
+
+### Agent result format
+
+```json
+{
+  "task_id": "task-001",
+  "status": "waiting_for_review",
+  "summary": "Inspection findings extracted and compared with the sample SOP.",
+  "facts": [],
+  "warnings": [],
+  "citations": [],
+  "outputs": [],
+  "events": []
+}
+```
+
+---
+
+## 20. Deliverable Generation
+
+### DOCX approval note
+
+Must contain:
+
+- Document title and generated date.
+- Subject and reference document.
+- Extracted findings.
+- Relevant evidence and page references.
+- Recommendations.
+- Risks and uncertainties.
+- Required approvals.
+- Human-review status.
+- System-generated disclaimer.
+
+### XLSX action tracker
+
+Suggested columns:
+
+```text
+Action ID | Finding | Severity | Responsible Role | Due Date | Evidence Page | Status | Reviewer
+```
+
+### PDF report
+
+Must contain:
+
+- Executive summary.
+- Input document metadata.
+- Processing steps.
+- Findings.
+- Evidence and citations.
+- Warnings and confidence.
+- Generated-by and model version.
+- Audit reference.
+
+### Generated code
+
+Must contain:
+
+- README with usage instructions.
+- Source files.
+- Tests.
+- Dependency list.
+- Execution result.
+- Sandbox restrictions.
+- No secret values.
+
+---
+
+## 21. Offline and Security Design
+
+### Sovereignty definition
+
+For this project, sovereignty means that confidential input data, model inference, embeddings, retrieval and output generation remain inside the controlled local environment. A statement in the README is not enough; the demo must provide evidence.
+
+### Required controls
+
+- Use local model endpoints only.
+- Disable outbound network access at the host/container level.
+- Use an allowlist for local services.
+- Disable dependency telemetry where possible.
+- Store all inputs and outputs on local volumes.
+- Keep audit logs append-only for the demo.
+- Hash important files.
+- Prevent documents from appearing in exception traces.
+- Restrict administrator operations.
+- Use a separate synthetic dataset for public development.
+
+### Network verification
+
+Before the demo:
+
+```bash
+# Show listening services
+ss -tulpn
+
+# Show active TCP connections
+ss -tpn
+
+# Inspect container network configuration
+docker network ls
+docker inspect <container-name>
+
+# Run the project verification script
+bash scripts/verify_offline_mode.sh
+```
+
+The verification script should:
+
+1. Check `OFFLINE_MODE=true`.
+2. Check `ALLOW_EXTERNAL_NETWORK=false`.
+3. Verify model endpoints resolve to local addresses.
+4. Check firewall or container network rules.
+5. Run a complete sample task.
+6. Save network and application logs.
+7. Fail if an unexpected external connection is detected.
+
+### Security threat model
+
+| Threat | Mitigation |
+|---|---|
+| Document exfiltration | No outbound network; local model gateway |
+| Prompt injection | Treat documents as untrusted; tool allowlist; review gates |
+| Malicious upload | File validation, size limits, malware scanning where available |
+| Path traversal | Canonicalize and restrict paths |
+| Unsafe generated code | Sandboxed execution with no network |
+| Hallucinated facts | Citations, confidence, validation and human review |
+| Unauthorized access | Local authentication and role permissions |
+| Log leakage | Redaction and minimal content logging |
+| Model supply-chain risk | Record source, checksum, version and license |
+
+---
+
+## 22. API Specification
+
+### Health
+
+```http
+GET /health
+```
+
+### Upload document
+
+```http
+POST /api/documents
+Content-Type: multipart/form-data
+```
+
+Response should include:
+
+```json
+{
+  "document_id": "doc-001",
+  "filename": "inspection_report.pdf",
+  "status": "uploaded",
+  "sha256": "..."
+}
+```
+
+### Create task
+
+```http
+POST /api/tasks
+Content-Type: application/json
+```
+
+```json
+{
+  "name": "Inspection report to approval note",
+  "document_ids": ["doc-001"],
+  "template": "inspection_to_approval",
+  "require_human_review": true
+}
+```
+
+### Task status
+
+```http
+GET /api/tasks/{task_id}
+```
+
+### Task events
+
+```http
+GET /api/tasks/{task_id}/events
+```
+
+### Generated outputs
+
+```http
+GET /api/tasks/{task_id}/outputs
+```
+
+### Knowledge indexing
+
+```http
+POST /api/knowledge/index
+```
+
+### Network status
+
+```http
+GET /api/security/network-status
+```
+
+### API rules
+
+- Validate all request bodies.
+- Return stable error schemas.
+- Authenticate non-public endpoints.
+- Add request IDs for tracing.
+- Never return secrets.
+- Never expose arbitrary filesystem paths.
+
+---
+
+## 23. Testing Strategy
+
+### Unit tests
+
+Test:
+
+- File validation.
+- Text extraction.
+- OCR normalization.
+- Chunking.
+- Retrieval metadata.
+- Agent state transitions.
+- Prompt construction.
+- Output generation.
+- Path restrictions.
+- Audit event creation.
+
+### Integration tests
+
+Test:
+
+- Upload to extraction.
+- Extraction to indexing.
+- Retrieval to agent response.
+- Agent to DOCX/XLSX/PDF generation.
+- API authentication and permissions.
+- Offline model gateway.
+
+### End-to-end test
+
+Run the complete inspection-report workflow with a synthetic document and verify:
+
+- Expected extracted fields exist.
+- Expected citations exist.
+- Output files are created.
+- Human review is required.
+- Audit events are present.
+- No external connections occur.
+
+### Quality evaluation
+
+Create a small evaluation set with expected answers for:
+
+- OCR accuracy.
+- Field extraction.
+- Retrieval relevance.
+- Citation correctness.
+- Output completeness.
+- Task completion success.
+- Processing time.
+
+Do not evaluate only on fluent responses. Evaluate evidence and deliverable correctness.
+
+---
+
+## 24. Demo Plan
+
+### Five-minute presentation
+
+1. Introduce the confidentiality and document-processing problem.
+2. Show the architecture and local-only model gateway.
+3. Upload a synthetic scanned inspection report.
 4. Start the agentic workflow.
-5. Show OCR and source retrieval.
-6. Show the generated approval note and action tracker.
-7. Open audit and network logs.
-8. Explain how the same workbench supports a second task type.
+5. Show OCR, evidence and SOP retrieval.
+6. Show generated DOCX and XLSX files.
+7. Show task timeline and audit logs.
+8. Show blocked outbound network evidence.
+9. Demonstrate the second task type.
+10. Explain scalability and limitations.
+
+### Demo preparation checklist
+
+- [ ] Models are downloaded and tested.
+- [ ] No internet is needed during the demo.
+- [ ] Sample files are synthetic or publicly shareable.
+- [ ] Knowledge base is indexed.
+- [ ] Output templates are tested.
+- [ ] Firewall/network rules are tested.
+- [ ] A backup recording or screenshots exist.
+- [ ] The team has a CPU-only fallback.
+- [ ] All services have health checks.
+- [ ] The demo can be reset quickly.
 
 ---
 
-## 16. Contribution Guidelines
+## 25. Acceptance Criteria
 
-1. Create a branch from `main`.
-2. Make one focused change at a time.
-3. Add or update tests.
-4. Run formatting and tests locally.
-5. Update documentation when behavior changes.
-6. Do not commit secrets or confidential files.
-7. Open a pull request with screenshots for UI changes.
-8. Ask at least one teammate to review before merging.
+The MVP is considered successful when:
 
-### Commit message examples
+1. It runs on a local workstation or server.
+2. It accepts at least one scanned PDF and one image.
+3. It performs OCR or local multimodal extraction.
+4. It retrieves relevant content from a local knowledge base.
+5. It executes a multi-step task.
+6. It supports at least two task types.
+7. It generates a real DOCX, XLSX or PDF deliverable.
+8. It shows intermediate progress and final status.
+9. It provides citations or evidence references.
+10. It records audit events.
+11. It demonstrates blocked or absent external calls.
+12. It handles at least one failure safely.
+13. It can be set up from the repository documentation.
+14. It does not require proprietary confidential data for the demonstration.
+
+---
+
+## 26. Team Plan
+
+| Role | Main responsibility | Deliverables |
+|---|---|---|
+| Project lead | Scope, integration and submission | Milestones, pitch and final integration |
+| Backend lead | FastAPI, storage and APIs | Stable backend and API documentation |
+| AI/ML lead | OCR, models, prompts and retrieval | Model gateway and evaluation set |
+| Agent lead | Planning, tools and state machine | Agent workflow and task logs |
+| Frontend lead | Workbench user interface | Upload, progress, evidence and outputs |
+| Security/DevOps lead | Docker, network isolation and sandbox | Offline proof and deployment scripts |
+| Documentation lead | README, demo and presentation | Setup, screenshots, demo script and pitch |
+
+### Team working rules
+
+- Use small pull requests.
+- Review each other's code.
+- Keep setup instructions current.
+- Do not commit confidential documents.
+- Keep a known-good demo branch or tag.
+- Record model and dependency versions.
+- Assign one person to run the final offline rehearsal.
+
+---
+
+## 27. Roadmap
+
+### Phase 1: Foundation
+
+- [ ] Repository conventions.
+- [ ] Environment configuration.
+- [ ] Backend health endpoint.
+- [ ] Frontend shell.
+- [ ] Local storage.
+
+### Phase 2: Multimodal ingestion
+
+- [ ] PDF parser.
+- [ ] Image upload.
+- [ ] OCR pipeline.
+- [ ] Table extraction.
+- [ ] Extraction review screen.
+
+### Phase 3: Local intelligence
+
+- [ ] Text model gateway.
+- [ ] Vision model gateway.
+- [ ] Embedding service.
+- [ ] Vector retrieval.
+- [ ] Citations.
+
+### Phase 4: Agentic workflow
+
+- [ ] Task planner.
+- [ ] Tool registry.
+- [ ] State machine.
+- [ ] Retry and failure handling.
+- [ ] Human approval gate.
+
+### Phase 5: Deliverables
+
+- [ ] DOCX generator.
+- [ ] XLSX generator.
+- [ ] PDF generator.
+- [ ] Code generation and sandbox.
+- [ ] Output preview.
+
+### Phase 6: Security and final demo
+
+- [ ] Offline firewall rules.
+- [ ] Network monitor.
+- [ ] Audit export.
+- [ ] Security tests.
+- [ ] Performance testing.
+- [ ] Final rehearsal.
+
+---
+
+## 28. Troubleshooting
+
+### Model service is unavailable
+
+- Confirm the local model runtime is running.
+- Check the configured local endpoint.
+- Verify the model is already downloaded.
+- Check RAM/VRAM and model compatibility.
+- Use the CPU fallback profile.
+
+### OCR output is poor
+
+- Improve image resolution.
+- Deskew and rotate pages.
+- Apply contrast and denoising.
+- Try a different OCR language configuration.
+- Show low-confidence fields for manual correction.
+
+### Retrieval returns irrelevant results
+
+- Check chunk size and overlap.
+- Verify embeddings were generated with the expected model.
+- Add section and page metadata.
+- Improve the retrieval query.
+- Add a reranker or keyword filter.
+
+### Output file is empty or corrupt
+
+- Validate the structured intermediate result.
+- Check template paths.
+- Confirm write permissions.
+- Test the output generator independently.
+- Add a post-generation file validation step.
+
+### External network appears in logs
+
+- Stop the demo.
+- Identify the process and destination.
+- Disable the dependency's telemetry.
+- Update the allowlist.
+- Re-run offline verification before continuing.
+
+### Docker service cannot access a model
+
+- Confirm the model service is on the expected local Docker network.
+- Use the service name inside Docker, not `localhost`.
+- Confirm the model volume is mounted.
+- Verify the container health check.
+
+---
+
+## 29. Contribution Rules
+
+1. Create a feature branch.
+2. Make a focused change.
+3. Add tests and documentation.
+4. Run local quality checks.
+5. Do not commit `.env`, secrets, model weights or confidential documents.
+6. Open a pull request with a clear description.
+7. Request at least one review.
+8. Update the demo if behavior changes.
+
+### Commit examples
 
 ```text
 feat: add scanned PDF ingestion
 feat: add local knowledge retrieval
-fix: preserve page numbers in OCR output
-test: add task orchestration tests
-docs: update offline deployment guide
+feat: generate approval note docx
+fix: preserve page references in OCR output
+test: add offline network verification
+docs: expand deployment requirements
 ```
 
-### Local quality checks
+### Pull request checklist
 
-```bash
-# Backend tests
-pytest
-
-# Frontend checks
-npm run lint
-npm run test
-
-# Build the frontend
-npm run build
-```
-
-Use the commands that exist in the current implementation and keep this section synchronized with the project scripts.
+- [ ] Tests pass.
+- [ ] Documentation updated.
+- [ ] No secrets or sensitive files included.
+- [ ] API changes documented.
+- [ ] Security impact considered.
+- [ ] Demo path still works.
 
 ---
 
-## 17. License
+## 30. Responsible Use
 
-This repository is intended for the SIH 2026 project team. Add the final license only after the team agrees on the permitted use and ownership terms. Do not publish confidential MRPL data, proprietary documents, or restricted model files.
+This system assists authorized personnel; it does not replace qualified engineers, safety officers, reviewers or approval authorities. AI-generated results must be checked before being used for operational, safety, legal, financial or compliance decisions.
+
+The system must clearly show:
+
+- What was extracted directly from source documents.
+- What was inferred by the model.
+- What evidence supports the result.
+- What information is missing or uncertain.
+- What requires human approval.
+
+Never use the public repository or public demo to process real confidential industrial documents.
 
 ---
 
-## Official Problem Statement Reference
+## 31. License and Data Policy
 
-- Official portal: `https://sih.gov.in/sih2026PS`
+The project team must decide the final license before publication. Until then:
+
+- Do not include proprietary documents.
+- Do not include restricted MRPL data.
+- Do not include credentials or private keys.
+- Do not commit model weights unless their license permits it.
+- Record third-party licenses in `docs/THIRD_PARTY_NOTICES.md`.
+- Use synthetic or publicly shareable documents for examples.
+
+---
+
+## Official Reference
+
+- SIH portal: https://sih.gov.in/sih2026PS
+- Repository: https://github.com/jeevanhs06/SIH2026-MRPL-SovereignAI-Workbench
 - Organization: Mangalore Refinery and Petrochemicals Limited (MRPL)
-- Title: Sovereign On-Premise Agentic AI Workbench using Open-Weight Multimodal LLMs for Confidential Industrial Work
 - Category: Software
 - Theme: Smart Automation
-- Screenshot-reported ID: 26117
+- Screenshot-reported problem statement ID: `26117`
 
-The team should confirm the final official problem statement ID and wording directly on the SIH portal before preparing the final submission.
-
----
-
-**Status:** Planning and active development  
-**Repository:** `jeevanhs06/SIH2026-MRPL-SovereignAI-Workbench`  
+**Status:** Active development  
 **Last updated:** September 18, 2026
