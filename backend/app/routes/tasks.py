@@ -7,6 +7,14 @@ from app.services.task_service import TaskService
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])
 task_service = TaskService()
+running_tasks: set[asyncio.Task[None]] = set()
+
+
+async def _execute_task(task_id: str) -> None:
+    try:
+        await task_service.execute_task(task_id)
+    except Exception as exc:  # pragma: no cover - defensive failure path
+        await task_service.fail_task(task_id, str(exc))
 
 
 @router.get("", response_model=list[TaskResponse])
@@ -17,7 +25,9 @@ def list_tasks() -> list[TaskResponse]:
 @router.post("", response_model=TaskResponse, status_code=201)
 async def create_task(payload: TaskCreateRequest) -> TaskResponse:
     task = task_service.create_task(payload)
-    asyncio.create_task(task_service.execute_task(task.task_id))
+    background_task = asyncio.create_task(_execute_task(task.task_id))
+    running_tasks.add(background_task)
+    background_task.add_done_callback(running_tasks.discard)
     return task
 
 

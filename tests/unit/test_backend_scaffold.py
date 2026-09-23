@@ -18,6 +18,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "backend"))
 
 from app.main import app
+from app.routes import tasks as task_routes
 from app.services.storage import StorageService, StorageValidationError
 
 client = TestClient(app)
@@ -36,6 +37,26 @@ def test_upload_extension_validation() -> None:
     )
     assert response.status_code == 400
     assert "not allowed" in response.json()["detail"]
+
+
+def test_upload_read_is_capped_by_limit() -> None:
+    storage = StorageService()
+
+    class OversizedUpload:
+        filename = "large.txt"
+
+        def __init__(self) -> None:
+            self.read_size: int | None = None
+
+        async def read(self, size: int = -1) -> bytes:
+            self.read_size = size
+            return b"x" * (storage.settings.max_upload_size_bytes + 1)
+
+    upload = OversizedUpload()
+    with pytest.raises(StorageValidationError, match="exceeds configured size limit"):
+        asyncio.run(storage.save_upload(upload))  # type: ignore[arg-type]
+
+    assert upload.read_size == storage.settings.max_upload_size_bytes + 1
 
 
 def test_path_traversal_is_blocked() -> None:
@@ -70,6 +91,49 @@ def test_task_creation_and_execution_flow() -> None:
     payload = asyncio.run(wait_for_task())
     assert payload["status"] == "waiting_for_review"
     assert any(path.endswith("_result.json") for path in payload["output_files"])
+
+
+def test_health_endpoint_supports_local_frontend_origin() -> None:
+    response = client.options(
+        "/health",
+        headers={
+            "Origin": "http://localhost:5173",
+            "Access-Control-Request-Method": "GET",
+        },
+    )
+    assert response.status_code == 200
+    assert response.headers.get("access-control-allow-origin") == "http://localhost:5173"
+
+
+def test_task_failure_is_supervised(monkeypatch: pytest.MonkeyPatch) -> None:
+    async def crash(task_id: str) -> None:
+        raise RuntimeError(f"boom:{task_id}")
+
+    monkeypatch.setattr(task_routes.task_service, "execute_task", crash)
+
+    response = client.post(
+        "/tasks",
+        json={
+            "title": "Failing task",
+            "prompt": "Force a failure",
+            "document_ids": [],
+            "requires_review": False,
+        },
+    )
+    assert response.status_code == 201
+    task_id = response.json()["task_id"]
+
+    async def wait_for_failure() -> dict:
+        for _ in range(30):
+            payload = client.get(f"/tasks/{task_id}").json()
+            if payload["status"] == "failed":
+                return payload
+            await asyncio.sleep(0.05)
+        return client.get(f"/tasks/{task_id}").json()
+
+    payload = asyncio.run(wait_for_failure())
+    assert payload["status"] == "failed"
+    assert any(event["event"] == "task_failed" for event in payload["events"])
 
 
 def test_offline_network_status() -> None:

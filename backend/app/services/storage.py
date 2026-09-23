@@ -35,7 +35,7 @@ class StorageService:
             raise StorageValidationError("Path traversal attempt blocked")
 
     async def save_upload(self, upload: UploadFile) -> dict[str, str | int]:
-        raw = await upload.read()
+        raw = await upload.read(self.settings.max_upload_size_bytes + 1)
         size_bytes = len(raw)
         if size_bytes == 0:
             raise StorageValidationError("Empty uploads are not allowed")
