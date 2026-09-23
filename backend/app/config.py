@@ -6,7 +6,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DATA_ROOT = REPO_ROOT / "data"
-DEFAULT_KNOWLEDGE_BASE_ROOT = REPO_ROOT / "knowledge_base"
+DEFAULT_KNOWLEDGE_BASE_ROOT = Path("/workspace/knowledge_base")
+if not DEFAULT_KNOWLEDGE_BASE_ROOT.exists():
+    DEFAULT_KNOWLEDGE_BASE_ROOT = REPO_ROOT / "knowledge_base"
 
 
 class Settings(BaseSettings):

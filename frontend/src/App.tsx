@@ -16,6 +16,21 @@ function App() {
   const [prompt, setPrompt] = useState('Analyze findings and prepare output package')
   const [requiresReview, setRequiresReview] = useState(true)
 
+  const upsertTask = (task: TaskResponse) => {
+    setTasks((prev) => [task, ...prev.filter((existing) => existing.task_id !== task.task_id)])
+  }
+
+  const refreshTaskUntilTerminal = async (taskId: string) => {
+    for (let attempt = 0; attempt < 30; attempt += 1) {
+      const latest = await apiClient.getTask(taskId)
+      upsertTask(latest)
+      if (['waiting_for_review', 'completed', 'rejected', 'failed'].includes(latest.status)) {
+        return
+      }
+      await new Promise((resolve) => setTimeout(resolve, 500))
+    }
+  }
+
   useEffect(() => {
     const load = async () => {
       setLoading(true)
@@ -62,9 +77,11 @@ function App() {
       const created = await apiClient.createTask({
         title,
         prompt,
-        requires_review: requiresReview
+        requires_review: requiresReview,
+        document_ids: uploaded ? [uploaded.document_id] : []
       })
-      setTasks((prev) => [created, ...prev])
+      upsertTask(created)
+      void refreshTaskUntilTerminal(created.task_id)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Task creation failed')
     }

@@ -19,7 +19,8 @@ export const apiClient = {
   getHealth: () => request<HealthResponse>('/health'),
   getSecurityStatus: () => request<SecurityStatusResponse>('/security/network-status'),
   listTasks: () => request<TaskResponse[]>('/tasks'),
-  createTask: (payload: { title: string; prompt: string; requires_review: boolean }) =>
+  getTask: (taskId: string) => request<TaskResponse>(`/tasks/${taskId}`),
+  createTask: (payload: { title: string; prompt: string; requires_review: boolean; document_ids: string[] }) =>
     request<TaskResponse>('/tasks', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

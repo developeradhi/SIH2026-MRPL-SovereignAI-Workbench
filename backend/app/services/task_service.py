@@ -70,6 +70,12 @@ class TaskService:
         terminal_state = TaskStatus.waiting_for_review if task.requires_review else TaskStatus.completed
         await self._transition(task, terminal_state, "task_finished")
 
+    async def fail_task(self, task_id: str, reason: str) -> None:
+        task = self.tasks.get(task_id)
+        if task is None or task.status in {TaskStatus.completed, TaskStatus.rejected, TaskStatus.failed}:
+            return
+        await self._transition(task, TaskStatus.failed, "task_failed", {"error": reason})
+
     async def review_task(self, task_id: str, review: TaskReviewRequest) -> TaskResponse:
         task = self.get_task(task_id)
         if task.status != TaskStatus.waiting_for_review:
